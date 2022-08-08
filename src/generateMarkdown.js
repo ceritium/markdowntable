@@ -26,7 +26,7 @@
     data.forEach((row, indexRow) => {
       code = code.concat("| ")
       row.forEach((cell, indexCell) => {
-        code = code.concat(cell)
+        code = code.concat(cell.text)
         code = code.concat(" | ")
       })
       code = code.concat("\n")

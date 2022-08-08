@@ -10,12 +10,15 @@
     {text: "H3", align: "left"},
   ]
   const data = [
-    ["C11", "C12", "C13"],
-    ["C21", "C22", "C23"],
+    [{text: "D1"},
+    {text: "D2"},
+    {text: "D3"},]
   ]
   const addRow = () => {
-    let row = new Array(data[0].length)
-    row.fill(" ")
+    let row = headers.map(() => {
+      return {text: ""}
+    })
+
     data.push(row)
     data = data
     output = generateMarkdown(headers, data)
@@ -24,7 +27,7 @@
   const addCol = () => {
     headers.push({text: "Header", align: "left"})
     data.forEach(row => {
-      row.push(" ")
+      row.push({text: ""})
     })
     headers = headers
     data = data
@@ -33,6 +36,7 @@
 
   const updateHeaders = ()=> {
     headers = headers
+    data = data
     output = generateMarkdown(headers, data)
   }
 
@@ -55,7 +59,7 @@
       {#each data as row}
         <tr>
           {#each row as cell, cellIndex}
-            <Td value={cell} head={headers[cellIndex]}/>
+            <Td cell={cell} head={headers[cellIndex]} callback={updateHeaders}/>
           {/each}
         </tr>
       {/each}

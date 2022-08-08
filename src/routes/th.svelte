@@ -1,7 +1,12 @@
 <script>
   export let head, callback
-  const update = (e)=> {
+  const updateAlign = (e)=> {
     head.align = e.target.value
+    callback()
+  }
+
+  const updateText = (e)=> {
+    head.text = e.target.value
     callback()
   }
 
@@ -10,8 +15,8 @@
 </script>
 
 <th class={className}>
-  { head.text }
-  <select on:change={update} bind:value={head.align}>
+  <input type="text" on:keyup={updateText} bind:value={head.text}>
+  <select on:change={updateAlign} bind:value={head.align}>
     <option value="left">left</option>
     <option value="center">center</option>
     <option value="right">right</option>
