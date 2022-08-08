@@ -2,6 +2,8 @@
   import { onMount } from 'svelte';
   import Th from './th.svelte'
   import Td from './td.svelte'
+  import generateMarkdown from '../generateMarkdown.js'
+
   const headers = [
     {text: "H1", align: "left"},
     {text: "H2", align: "left"},
@@ -11,43 +13,6 @@
     ["C11", "C12", "C13"],
     ["C21", "C22", "C23"],
   ]
-
-  const generateMarkdown = (headers, data) => {
-    let code = ""
-
-    code = code.concat("| ")
-    headers.forEach((header) => {
-      code = code.concat(header.text)
-      code = code.concat(" | ")
-    })
-    code = code.concat("\n")
-
-    code = code.concat("| ")
-    headers.forEach((header) => {
-      if(header.align == "left") {
-        code = code.concat(" :--- ")
-      } else if(header.align == "right") {
-        code = code.concat(" ---: ")
-      } else {
-        code = code.concat(" :---: ")
-      }
-
-      code = code.concat(" | ")
-    })
-
-    code = code.concat("\n")
-
-    data.forEach((row, indexRow) => {
-      code = code.concat("| ")
-      row.forEach((cell, indexCell) => {
-        code = code.concat(cell)
-        code = code.concat(" | ")
-      })
-      code = code.concat("\n")
-    })
-    return code
-  }
-
   const addRow = () => {
     let row = new Array(data[0].length)
     row.fill(" ")
