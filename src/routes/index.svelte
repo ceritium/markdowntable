@@ -1,43 +1,78 @@
 <script>
   import { onMount } from 'svelte';
+  import Cell from './cell.svelte'
   const data = [
     ["Head 1", "Head2", "Head3"],
     ["C11", "C12", "C13"],
     ["C21", "C22", "C23"],
   ]
-  let tbodyData = data
-  let withHead = false
+  let withHead = true
 
+  const generateMarkdown = () => {
+    let code = ""
+    data.forEach((row, indexRow) => {
+      code = code.concat("| ")
+      row.forEach((cell, indexCell) => {
+        code = code.concat(cell)
+        code = code.concat(" | ")
+      })
+      if(indexRow == 0 && withHead) {
+        code = code.concat("\n")
+        code = code.concat("| ")
+        row.forEach((cell, indexCell) => {
+          code = code.concat(" :-- ")
+          code = code.concat(" | ")
+        })
+
+      }
+      code = code.concat("\n")
+    })
+    return code
+  }
+
+  const addRow = () => {
+    let row = new Array(data[0].length)
+    row.fill(" ")
+    data.push(row)
+    data = data
+    output = generateMarkdown()
+  }
+
+  const addCol = () => {
+    data.forEach(row => {
+      row.push(" ")
+    })
+    data = data
+    output = generateMarkdown()
+  }
+
+  let output;
   $: {
-    if(withHead) {
-      tbodyData = data.slice(1,data.length + 1)
-    } else {
-      tbodyData = data
-    }
+    console.log(withHead, data)
+    output = generateMarkdown()
   }
 
 </script>
 <div class="container p-3">
-  <label for="withHead"> With Head: </label>
+  <button on:click={addRow}> Add row </button>
+  <button on:click={addCol}> Add col </button>
+  <br/>
   <input name="withHead" type="checkbox" bind:checked={withHead}>
   <table class="table table-bordered">
-    {#if withHead}
-      <thead>
-        <tr>
-          {#each data[0] as cell}
-            <th> { cell } </th>
-          {/each}
-        </tr>
-      </thead>
-    {/if}
     <tbody>
-      {#each tbodyData as row}
+      {#each data as row, rowIndex}
         <tr>
           {#each row as cell}
-            <td> {cell} </td>
+            <Cell value={cell} withHead={withHead} index={rowIndex}/>
           {/each}
         </tr>
       {/each}
     </tbody>
   </table>
+
+  <pre>
+    <code>
+{ output }
+    </code>
+  </pre>
 </div>
