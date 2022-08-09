@@ -1,5 +1,6 @@
 <script>
-  import { onMount } from 'svelte';
+  import LZString from 'lz-string'
+  import { onMount } from 'svelte'
   import Th from './th.svelte'
   import Td from './td.svelte'
   import generateMarkdown from '../generateMarkdown.js'
@@ -70,9 +71,9 @@
 
   const updateUrl = (headers, data) => {
     if(!loading) {
-      const url = `?table=${btoa(JSON.stringify({headers: headers, data: data, v: 0}))}`
+      const table = LZString.compressToEncodedURIComponent(JSON.stringify({headers: headers, data: data, v: 0}))
+      const url = `?table=${table}`
       if(typeof window !== 'undefined' && typeof history !== 'undefined') {
-        console.log(url)
         history.pushState(history.state, '', url)
       }
     }
@@ -83,7 +84,7 @@
   const loadFromUrl = () => {
     const table = (new URL(window.location)).searchParams.get('table')
     if (table) {
-      const raw = JSON.parse(atob(table))
+      const raw = JSON.parse(LZString.decompressFromEncodedURIComponent(table))
       headers = raw.headers
       data = raw.data
       console.log(headers, data)
