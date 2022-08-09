@@ -6,6 +6,7 @@
   import generateMarkdown from '../generateMarkdown.js'
 
 
+  let url = ""
   let loading = true
   let headers = [
     {text: "H1", align: "left"},
@@ -72,7 +73,7 @@
   const updateUrl = (headers, data) => {
     if(!loading) {
       const table = LZString.compressToEncodedURIComponent(JSON.stringify({headers: headers, data: data, v: 0}))
-      const url = `?table=${table}`
+      url = `?table=${table}`
       if(typeof window !== 'undefined' && typeof history !== 'undefined') {
         history.pushState(history.state, '', url)
       }
@@ -126,6 +127,7 @@
   <pre>
     <code>
 { output }
+[☝️ edit this table](https://markdowntable.netlify.app/{url})
     </code>
   </pre>
 </div>
