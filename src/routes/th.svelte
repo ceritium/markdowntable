@@ -2,15 +2,9 @@
   import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 
-  export let head, callback
-  const updateAlign = (e)=> {
-    head.align = e.target.value
-    callback()
-  }
-
-  const updateText = (e)=> {
-    head.text = e.target.value
-    callback()
+  export let head
+  const notifyUpdate = ()=> {
+		dispatch('update');
   }
 
   const removeColumn = () => {
@@ -26,13 +20,13 @@
 <th class={className}>
   <div class="controls">
     <button class="btn btn-danger" on:click={removeColumn}> Remove </button>
-    <select class="form-control" on:change={updateAlign} bind:value={head.align}>
+    <select class="form-control" on:change={notifyUpdate} bind:value={head.align}>
       <option value="left">left</option>
       <option value="center">center</option>
       <option value="right">right</option>
     </select>
   </div>
-  <input type="text" on:keyup={updateText} bind:value={head.text}>
+  <input type="text" on:keyup={notifyUpdate} bind:value={head.text}>
 </th>
 
 <style>

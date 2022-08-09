@@ -22,7 +22,6 @@
 
     data.push(row)
     data = data
-    /* output = generateMarkdown(headers, data) */
   }
 
   const addCol = () => {
@@ -32,23 +31,24 @@
     })
     headers = headers
     data = data
-    /* output = generateMarkdown(headers, data) */
   }
 
-  const updateHeaders = ()=> {
+  const updateCallback = () => {
     headers = headers
     data = data
-    /* output = generateMarkdown(headers, data) */
   }
 
   const removeColumn = (event) => {
     const head = event.detail.head
     const removeIndex = headers.indexOf(head)
-    headers = headers.filter(function(value, index, arr){
-      return index != removeIndex
-    });
 
-    data = data.filter(function(value, index, arr){
+    data = data.map((row) => {
+      return row.filter((item, indexRow) => {
+        return removeIndex != indexRow
+      })
+    })
+
+    headers = headers.filter(function(value, index, arr){
       return index != removeIndex
     });
   }
@@ -72,7 +72,7 @@
         <th>
         </th>
         {#each headers as cell}
-          <Th head={cell} on:removeColumn={removeColumn} callback={updateHeaders}/>
+          <Th head={cell} on:removeColumn={removeColumn} on:update={updateCallback}/>
         {/each}
       </tr>
     </thead>
@@ -83,7 +83,7 @@
             <button on:click={() => removeRow(row)}> remove </button>
           </td>
           {#each row as cell, cellIndex}
-            <Td cell={cell} head={headers[cellIndex]} callback={updateHeaders}/>
+            <Td cell={cell} head={headers[cellIndex]} on:update={updateCallback}/>
           {/each}
         </tr>
       {/each}

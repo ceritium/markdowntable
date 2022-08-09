@@ -1,9 +1,11 @@
 <script>
-  export let cell, head, callback
+  import { createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
 
-  const updateText = (e)=> {
-    cell.text = e.target.value
-    callback()
+  export let cell, head
+
+  const notifyUpdate = (e)=> {
+		dispatch('update');
   }
 
   const CLASSNAMES = {left: "text-start", center: "text-center", right: "text-end"}
@@ -11,5 +13,5 @@
 </script>
 
 <td class={className}>
-  <input type="text" on:keyup={updateText} value={cell.text}>
+  <input type="text" on:keyup={notifyUpdate} bind:value={cell.text}>
 </td>
