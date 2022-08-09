@@ -4,6 +4,8 @@
   import Td from './td.svelte'
   import generateMarkdown from '../generateMarkdown.js'
 
+
+  let loading = true
   let headers = [
     {text: "H1", align: "left"},
     {text: "H2", align: "left"},
@@ -15,6 +17,13 @@
     {text: "D2"},
     {text: "D3"},]
   ]
+
+
+  onMount(() => {
+    loadFromUrl()
+  })
+
+
   const addRow = () => {
     let row = headers.map(() => {
       return {text: ""}
@@ -59,7 +68,30 @@
     })
   }
 
+  const updateUrl = (headers, data) => {
+    if(!loading) {
+      const url = `?table=${btoa(JSON.stringify({headers: headers, data: data, v: 0}))}`
+      if(typeof window !== 'undefined' && typeof history !== 'undefined') {
+        console.log(url)
+        history.pushState(history.state, '', url)
+      }
+    }
+
+    loading = false
+  }
+
+  const loadFromUrl = () => {
+    const table = (new URL(window.location)).searchParams.get('table')
+    if (table) {
+      const raw = JSON.parse(atob(table))
+      headers = raw.headers
+      data = raw.data
+      console.log(headers, data)
+    }
+  }
+
   $: output = generateMarkdown(headers, data)
+  $: updateUrl(headers, data)
 
 </script>
 <div class="container p-3">
