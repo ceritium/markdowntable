@@ -4,12 +4,13 @@
   import Td from './td.svelte'
   import generateMarkdown from '../generateMarkdown.js'
 
-  const headers = [
+  let headers = [
     {text: "H1", align: "left"},
     {text: "H2", align: "left"},
     {text: "H3", align: "left"},
   ]
-  const data = [
+
+  let data = [
     [{text: "D1"},
     {text: "D2"},
     {text: "D3"},]
@@ -40,6 +41,18 @@
     output = generateMarkdown(headers, data)
   }
 
+  const removeCallback = (event) => {
+    const head = event.detail.head
+    const removeIndex = headers.indexOf(head)
+    headers = headers.filter(function(value, index, arr){
+      return index != removeIndex
+    });
+
+    data = data.filter(function(value, index, arr){
+      return index != removeIndex
+    });
+  }
+
   let output = generateMarkdown(headers, data)
 
 </script>
@@ -51,7 +64,7 @@
     <thead>
       <tr>
       {#each headers as cell}
-        <Th head={cell} callback={updateHeaders}/>
+        <Th head={cell} on:removeColumn={removeCallback} callback={updateHeaders}/>
       {/each}
       </tr>
     </thead>
