@@ -19,19 +19,31 @@
 
 <th class={className}>
   <div class="controls">
-    <button class="btn btn-danger" on:click={removeColumn}> Remove </button>
-    <select class="form-control" on:change={notifyUpdate} bind:value={head.align}>
+    <button class="btn btn-sm btn-danger" on:click={removeColumn}> Remove </button>
+    <select class="form-control form-control-sm" on:change={notifyUpdate} bind:value={head.align}>
       <option value="left">left</option>
       <option value="center">center</option>
       <option value="right">right</option>
     </select>
   </div>
-  <input type="text" on:keyup={notifyUpdate} bind:value={head.text}>
+  <input class="cell" type="text" on:keyup={notifyUpdate} bind:value={head.text}>
 </th>
 
 <style>
+  .cell {
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+    border: 1px solid #ccc;
+    padding: 5px
+  }
+
+  .cell:hover {
+    border: 1px solid red;
+  }
   th {
     position: relative;
+    padding: 0;
   }
   .controls {
     position: absolute;

@@ -4,6 +4,7 @@
   import Th from './th.svelte'
   import Td from './td.svelte'
   import generateMarkdown from '../generateMarkdown.js'
+	import { clickToCopy } from "../clickToCopy.js"
 
 
   let url = ""
@@ -100,21 +101,24 @@
   <button on:click={addRow}> Add row </button>
   <button on:click={addCol}> Add col </button>
   <br/>
-  <table class="table table-bordered">
+  <table class="table table-hover table-bordered">
     <thead>
       <tr>
         <th>
+          <!--
+          <button disabled class="delete-row-button btn btn-sm btn-warning"> required </button>
+          -->
         </th>
         {#each headers as cell}
           <Th head={cell} on:removeColumn={removeColumn} on:update={updateCallback}/>
         {/each}
       </tr>
     </thead>
-    <tbody>
+    <tbody class="table-group-divider">
       {#each data as row, rowIndex}
         <tr>
           <td>
-            <button on:click={() => removeRow(row)}> remove </button>
+            <button class="delete-row-button btn btn-sm btn-warning" on:click={() => removeRow(row)}> remove </button>
           </td>
           {#each row as cell, cellIndex}
             <Td cell={cell} head={headers[cellIndex]} on:update={updateCallback}/>
@@ -124,10 +128,45 @@
     </tbody>
   </table>
 
-  <pre>
-    <code>
-{ output }
+  <div class="markdown-code">
+    <button class="copy-button btn btn-sm btn-info" use:clickToCopy={'code.markdown'}>
+      Click to copy
+    </button>
+<pre><code class="markdown">{ output }
 [☝️ edit this table](https://markdowntable.netlify.app/{url})
-    </code>
-  </pre>
+</code></pre>
+  </div>
 </div>
+
+<style>
+  .markdown-code {
+    background: #eee;
+    border: 2px solid #aaa;
+    border-radius: 5px;
+    padding: 20px;
+    position: relative;
+   }
+
+  .markdown pre {
+    margin: 0;
+  }
+
+  .markdown-code .copy-button {
+    position: absolute;
+    display: none;
+    right: 5px;
+    top: 5px;
+  }
+
+  .markdown-code:hover .copy-button {
+    display: block;
+  }
+
+  .delete-row-button {
+    visibility: hidden;
+   }
+
+  tr:hover .delete-row-button {
+    visibility: visible;
+   }
+</style>
