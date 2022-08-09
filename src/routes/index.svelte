@@ -22,7 +22,7 @@
 
     data.push(row)
     data = data
-    output = generateMarkdown(headers, data)
+    /* output = generateMarkdown(headers, data) */
   }
 
   const addCol = () => {
@@ -32,16 +32,16 @@
     })
     headers = headers
     data = data
-    output = generateMarkdown(headers, data)
+    /* output = generateMarkdown(headers, data) */
   }
 
   const updateHeaders = ()=> {
     headers = headers
     data = data
-    output = generateMarkdown(headers, data)
+    /* output = generateMarkdown(headers, data) */
   }
 
-  const removeCallback = (event) => {
+  const removeColumn = (event) => {
     const head = event.detail.head
     const removeIndex = headers.indexOf(head)
     headers = headers.filter(function(value, index, arr){
@@ -53,7 +53,13 @@
     });
   }
 
-  let output = generateMarkdown(headers, data)
+  const removeRow = (row) => {
+    data = data.filter((value) => {
+      return value != row
+    })
+  }
+
+  $: output = generateMarkdown(headers, data)
 
 </script>
 <div class="container p-3">
@@ -63,14 +69,19 @@
   <table class="table table-bordered">
     <thead>
       <tr>
-      {#each headers as cell}
-        <Th head={cell} on:removeColumn={removeCallback} callback={updateHeaders}/>
-      {/each}
+        <th>
+        </th>
+        {#each headers as cell}
+          <Th head={cell} on:removeColumn={removeColumn} callback={updateHeaders}/>
+        {/each}
       </tr>
     </thead>
     <tbody>
-      {#each data as row}
+      {#each data as row, rowIndex}
         <tr>
+          <td>
+            <button on:click={() => removeRow(row)}> remove </button>
+          </td>
           {#each row as cell, cellIndex}
             <Td cell={cell} head={headers[cellIndex]} callback={updateHeaders}/>
           {/each}
