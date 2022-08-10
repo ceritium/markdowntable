@@ -5,17 +5,23 @@
   export let cell, align;
 
   const notifyUpdate = (e)=> {
-		dispatch('update');
+		dispatch('update')
+  }
+  const notifyFocus = (e) => {
+    dispatch('focus')
+  }
+
+  const notifyBlur = (e) => {
+    dispatch('blur')
   }
 
   const CLASSNAMES = {left: "text-start", center: "text-center", right: "text-end"}
   $: className = CLASSNAMES[align]
 </script>
 
-<td class={className}>
-  <input class="cell {className}" type="text" on:keyup={notifyUpdate} bind:value={cell.text}>
+<td>
+  <input class="cell {className}" type="text" on:blur={notifyBlur} on:focus={notifyFocus} on:keyup={notifyUpdate} bind:value={cell.text}>
 </td>
-
 
 <style>
   .cell {
@@ -47,5 +53,6 @@
   * ---------------------------------------------- */
   @keyframes shadow-inset-center{
     0%{box-shadow:inset 0 0 0 0 transparent}
-    100%{box-shadow:inset 0 0 3px 0 #ccc}}
+    100%{box-shadow:inset 0 0 3px 0 #ccc}
+  }
 </style>

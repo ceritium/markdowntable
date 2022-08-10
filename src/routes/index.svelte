@@ -4,15 +4,17 @@
   import ColumnControls from './columnControls.svelte'
   import Cell from './cell.svelte'
   import generateMarkdown from '../generateMarkdown.js'
+  import buildFromPaste from '../buildFromPaste.js'
 	import { clickToCopy } from "../clickToCopy.js"
 
-
+  let selectedX, selectedY;
+  let currentCell = {x: null, y: null}
   let url = ""
   let loading = true
   let headers = [
-    {text: "H1", align: "left"},
-    {text: "H2", align: "left"},
-    {text: "H3", align: "left"},
+    {align: "left"},
+    {align: "left"},
+    {align: "left"},
   ]
 
   let data = [
@@ -21,11 +23,28 @@
     {text: "D3"},]
   ]
 
-
   onMount(() => {
     loadFromUrl()
   })
 
+  const onPaste = (event) => {
+    event.preventDefault()
+
+    let paste = (event.clipboardData || window.clipboardData).getData('text');
+    const raw = buildFromPaste(paste)
+    headers = raw.headers
+    data = raw.data
+  }
+
+  const setFocus = (x,y) => {
+    currentCell.x = x
+    currentCell.y = y
+  }
+
+  const unsetFocus = () => {
+    currentCell.x = null
+    currentCell.y = null
+  }
 
   const addRow = () => {
     let row = headers.map(() => {
@@ -97,7 +116,9 @@
   $: updateUrl(headers, data)
 
 </script>
+<svelte:window on:paste={(e) => { onPaste(e)}}/>
 <div class="container p-3">
+  { currentCell.x }:{currentCell.y}
   <button on:click={addRow}> Add row </button>
   <button on:click={addCol}> Add col </button>
   <br/>
@@ -106,15 +127,7 @@
       <tr>
         <th></th> <!-- empty -->
         {#each headers as head}
-          <ColumnControls  on:removeColumn={removeColumn} on:update={updateCallback} head={head}/>
-        {/each}
-      </tr>
-      <tr>
-        <th>
-          <button disabled class="delete-row-button btn btn-sm btn-warning"> required </button>
-        </th>
-        {#each headers as cell}
-          <Cell cell={cell} align={cell.align} on:update={updateCallback}/>
+          <ColumnControls on:removeColumn={removeColumn} on:update={updateCallback} head={head}/>
         {/each}
       </tr>
     </thead>
@@ -125,7 +138,7 @@
             <button class="delete-row-button btn btn-sm btn-warning" on:click={() => removeRow(row)}> remove </button>
           </td>
           {#each row as cell, cellIndex}
-            <Cell cell={cell} align={headers[cellIndex].align} on:update={updateCallback}/>
+            <Cell cell={cell} align={headers[cellIndex].align} on:blur={unsetFocus} on:focus={() => setFocus(rowIndex + 1, cellIndex)} on:update={updateCallback}/>
           {/each}
         </tr>
       {/each}
@@ -150,10 +163,6 @@
     padding: 20px;
     position: relative;
    }
-
-  .markdown pre {
-    margin: 0;
-  }
 
   .markdown-code .copy-button {
     position: absolute;
