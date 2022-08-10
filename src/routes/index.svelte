@@ -1,8 +1,8 @@
 <script>
   import LZString from 'lz-string'
   import { onMount } from 'svelte'
-  import Th from './th.svelte'
-  import Td from './td.svelte'
+  import ColumnControls from './columnControls.svelte'
+  import Cell from './cell.svelte'
   import generateMarkdown from '../generateMarkdown.js'
 	import { clickToCopy } from "../clickToCopy.js"
 
@@ -104,13 +104,17 @@
   <table class="table table-hover table-bordered">
     <thead>
       <tr>
+        <th></th> <!-- empty -->
+        {#each headers as head}
+          <ColumnControls  on:removeColumn={removeColumn} on:update={updateCallback} head={head}/>
+        {/each}
+      </tr>
+      <tr>
         <th>
-          <!--
           <button disabled class="delete-row-button btn btn-sm btn-warning"> required </button>
-          -->
         </th>
         {#each headers as cell}
-          <Th head={cell} on:removeColumn={removeColumn} on:update={updateCallback}/>
+          <Cell cell={cell} align={cell.align} on:update={updateCallback}/>
         {/each}
       </tr>
     </thead>
@@ -121,7 +125,7 @@
             <button class="delete-row-button btn btn-sm btn-warning" on:click={() => removeRow(row)}> remove </button>
           </td>
           {#each row as cell, cellIndex}
-            <Td cell={cell} head={headers[cellIndex]} on:update={updateCallback}/>
+            <Cell cell={cell} align={headers[cellIndex].align} on:update={updateCallback}/>
           {/each}
         </tr>
       {/each}
