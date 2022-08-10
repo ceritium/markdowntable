@@ -133,7 +133,7 @@
       Click to copy
     </button>
 <pre><code class="markdown">{ output }
-[☝️ edit this table](https://markdowntable.netlify.app/{url})
+[☝️ edit me](https://markdowntable.netlify.app/{url})
 </code></pre>
   </div>
 </div>
