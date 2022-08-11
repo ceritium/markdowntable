@@ -14,9 +14,13 @@
      return text
    }
 
-    // const widthCols = data.map((row) => {
-    //   return Math.max(...row.map(cell => cell.length))
-    // })
+   // Formate data
+   data = data.map((row, indexRow) => {
+      return row.map((cell, indexCell) => {
+        const col = cols[indexCell]
+        return (cell && col && col.bold) ? bold(cell) : cell
+      })
+   })
 
    const widthCols = data.reduce((obj, row) => {
     row.forEach((cell, colIndex) => {
@@ -30,9 +34,7 @@
     data.forEach((row, indexRow) => {
       add("| ")
       row.forEach((cell, indexCell) => {
-        const col = cols[indexCell]
-        const text = (cell && col && col.bold) ? bold(cell) : cell
-        add(padded(text, indexCell))
+        add(padded(cell, indexCell))
         add(" | ")
       })
 
