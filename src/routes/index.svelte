@@ -191,7 +191,7 @@
       </button>
 <pre><code class="markdown">{ markdownTable }
 {#if url}
-[☝️edit me](https://markdowntable.netlify.app/{url})
+[☝️edit me](https://markdowntable.jose.gr/{url})
 {/if}
 </code></pre>
     </div>
