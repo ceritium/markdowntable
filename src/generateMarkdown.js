@@ -1,41 +1,66 @@
  const generateMarkdown = (cols, data) => {
     let code = ""
 
+    const add = (text) => { code = code.concat(text) }
+    const addBl = () =>  add("\n")
+
+   const bold = (text) => `**${text}**`
+
+   const padded = (text, colIndex) => {
+      const padding = Math.max(widthCols[colIndex], 6) - text.length
+      for (let i = 0; i < padding; i++) {
+        text += " ";
+      }
+     return text
+   }
+
+    // const widthCols = data.map((row) => {
+    //   return Math.max(...row.map(cell => cell.length))
+    // })
+
+   const widthCols = data.reduce((obj, row) => {
+    row.forEach((cell, colIndex) => {
+      obj[colIndex] ||= 0
+      obj[colIndex] = Math.max(obj[colIndex], cell.length)
+    })
+
+    return obj
+   }, {})
+
     data.forEach((row, indexRow) => {
-      code = code.concat("| ")
+      add("| ")
       row.forEach((cell, indexCell) => {
         const col = cols[indexCell]
-        if(col && col.bold) { code = code.concat("**") }
-        code = code.concat(cell)
-        if(col && col.bold) { code = code.concat("**") }
-        code = code.concat(" | ")
+        const text = (cell && col && col.bold) ? bold(cell) : cell
+        add(padded(text, indexCell))
+        add(" | ")
       })
 
       if(indexRow == 0) {
-        code = code.concat("\n")
-        code = code.concat("| ")
+        addBl()
+        add("| ")
 
         row.forEach((cell, indexCell) => {
           const col = cols[indexCell]
           if (col) {
             if(col.align == "left") {
-              code = code.concat(" :--- ")
+              add(padded(":---", indexCell))
             } else if(col.align == "right") {
-              code = code.concat(" ---: ")
+              add(padded("---: ", indexCell))
             } else if(col.align == "center") {
-              code = code.concat(" :---: ")
+              add(padded(":---:", indexCell))
             } else {
-              code = code.concat(" ---- ")
+              add(padded("----", indexCell))
             }
           } else {
-            code = code.concat(" ---- ")
+            add(padded("----", indexCell))
           }
 
-          code = code.concat(" | ")
+          add(" | ")
         })
       }
 
-      code = code.concat("\n")
+      addBl()
     })
     return code
   }
