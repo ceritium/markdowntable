@@ -9,6 +9,7 @@
   let loading = true;
   let url;
   let cols = {}
+  let rows = {}
   let data = []
 
   onMount(() => {
@@ -72,6 +73,14 @@
       onundo: onChange,
       onredo: onChange,
       updateTable: (instance, cell, col, row, val, label, cellName) => {
+
+        const rowConfig = rows[row]
+        if(rowConfig) {
+          if(rowConfig.bold) {
+            cell.style.fontWeight = "bold"
+          }
+        }
+
         const colConfig = cols[col]
         if (colConfig) {
           cell.style.textAlign = colConfig.align || "left"
@@ -89,10 +98,7 @@
   })
 
   const updateTable = () => {
-    const selectedColumns = table.getSelectedColumns()
-    table.updateSelectionFromCoords(selectedColumns[0], 0, selectedColumns[selectedColumns.lenght], table.getData().length)
     table.setData(table.getData())
-    cols = cols
     data = table.getData()
   }
 
@@ -109,11 +115,21 @@
     const selectedRows = table.getSelectedRows(true)
     const selectedColumns = table.getSelectedColumns()
 
+    // Full columns
     if(selectedRows.length == data.length) {
       selectedColumns.forEach((col) => {
         cols[col] ||= {}
-        cols[col].bold = true
+        cols[col].bold = !!!cols[col].bold
       })
+
+    // Full rows
+    } else if(selectedColumns.length == data[0].length) {
+      selectedRows.forEach((row) => {
+        rows[row] ||= {}
+        rows[row].bold = !!!rows[row].bold
+      })
+
+    // Cells
     } else {
       selectedRows.forEach((row) => {
         selectedColumns.forEach((col) => {
@@ -123,9 +139,10 @@
       })
     }
 
-    // TODO: fullrows
-
     updateTable()
+
+    // Restore selection
+    table.updateSelectionFromCoords(selectedColumns[0], selectedRows[0], selectedColumns[selectedColumns.length-1], selectedRows[selectedRows.length-1])
   }
 
   const onChange = (e) => {
@@ -155,9 +172,9 @@
     table.setData([[]])
   }
 
-  const updateUrl = (cols, data) => {
+  const updateUrl = (cols, rows, data) => {
     if(!loading) {
-      const table = LZString.compressToEncodedURIComponent(JSON.stringify({cols: cols, data: data, v: 0}))
+      const table = LZString.compressToEncodedURIComponent(JSON.stringify({cols: cols, rows: rows, data: data, v: 0}))
       url = `?table=${table}`
       history.replaceState(history.state, '', url)
     }
@@ -167,15 +184,16 @@
     const table = (new URL(window.location)).searchParams.get('table')
     if (table) {
       const raw = JSON.parse(LZString.decompressFromEncodedURIComponent(table))
-      cols = raw.cols
-      data = raw.data
+      cols = raw.cols || {}
+      rows = raw.rows || {}
+      data = raw.data || []
     }
 
     loading = false
   }
 
-  $: updateUrl(cols, data)
-  $: markdownTable = generateMarkdown(cols, data)
+  $: updateUrl(cols, rows, data)
+  $: markdownTable = generateMarkdown(cols, rows, data)
 
 </script>
 
