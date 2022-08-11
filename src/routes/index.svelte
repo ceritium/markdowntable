@@ -160,4 +160,27 @@
     </div>
 </div>
 <style>
+  .markdown-code {
+    background: #eee;
+    border: 2px solid #aaa;
+    border-radius: 5px;
+    padding: 20px;
+    position: relative;
+   }
+
+  .markdown-code pre {
+    overflow: hidden;
+    margin-bottom: 0;
+  }
+
+  .markdown-code .copy-button {
+    position: absolute;
+    display: none;
+    right: 5px;
+    top: 5px;
+  }
+
+  .markdown-code:hover .copy-button {
+    display: block;
+  }
 </style>
