@@ -1,185 +1,163 @@
 <script>
   import LZString from 'lz-string'
   import { onMount } from 'svelte'
-  import ColumnControls from './columnControls.svelte'
-  import Cell from './cell.svelte'
+  import contextMenu from '../contextMenu.js'
   import generateMarkdown from '../generateMarkdown.js'
-  import buildFromPaste from '../buildFromPaste.js'
-	import { clickToCopy } from "../clickToCopy.js"
+  import { clickToCopy } from "../clickToCopy.js"
 
-  let selectedX, selectedY;
-  let currentCell = {x: null, y: null}
-  let url = ""
-  let loading = true
-  let headers = [
-    {align: "left"},
-    {align: "left"},
-    {align: "left"},
-  ]
-
-  let data = [
-    [{text: "D1"},
-    {text: "D2"},
-    {text: "D3"},]
-  ]
+  let table
+  let loading = true;
+  let url;
+  let cols = {}
+  let data = []
 
   onMount(() => {
     loadFromUrl()
-  })
 
-  const onPaste = (event) => {
-    event.preventDefault()
-
-    let paste = (event.clipboardData || window.clipboardData).getData('text');
-    const raw = buildFromPaste(paste)
-    headers = raw.headers
-    data = raw.data
-  }
-
-  const setFocus = (x,y) => {
-    currentCell.x = x
-    currentCell.y = y
-  }
-
-  const unsetFocus = () => {
-    currentCell.x = null
-    currentCell.y = null
-  }
-
-  const addRow = () => {
-    let row = headers.map(() => {
-      return {text: ""}
-    })
-
-    data.push(row)
-    data = data
-  }
-
-  const addCol = () => {
-    headers.push({text: "Header", align: "left"})
-    data.forEach(row => {
-      row.push({text: ""})
-    })
-    headers = headers
-    data = data
-  }
-
-  const updateCallback = () => {
-    headers = headers
-    data = data
-  }
-
-  const removeColumn = (event) => {
-    const head = event.detail.head
-    const removeIndex = headers.indexOf(head)
-
-    data = data.map((row) => {
-      return row.filter((item, indexRow) => {
-        return removeIndex != indexRow
-      })
-    })
-
-    headers = headers.filter(function(value, index, arr){
-      return index != removeIndex
-    });
-  }
-
-  const removeRow = (row) => {
-    data = data.filter((value) => {
-      return value != row
-    })
-  }
-
-  const updateUrl = (headers, data) => {
-    if(!loading) {
-      const table = LZString.compressToEncodedURIComponent(JSON.stringify({headers: headers, data: data, v: 0}))
-      url = `?table=${table}`
-      if(typeof window !== 'undefined' && typeof history !== 'undefined') {
-        history.pushState(history.state, '', url)
+    const options = {
+      data: data,
+      toolbar:[
+        {
+            type: 'i',
+            content: 'undo',
+            onclick: function() {
+                table.undo();
+            }
+        },
+        {
+            type: 'i',
+            content: 'redo',
+            onclick: function() {
+                table.redo();
+            }
+        },
+        {
+          type: 'i',
+          content: 'format_align_left',
+          onclick: () => setColumnAlign("left")
+        },
+        {
+          type: 'i',
+          content: 'format_align_center',
+          onclick: () => setColumnAlign("center")
+        },
+        {
+          type: 'i',
+          content: 'format_align_right',
+          onclick: () => setColumnAlign("right")
+        },
+      ],
+      defaultColWidth: 100,
+      minDimensions:[3,3],
+      columnDrag: true,
+      rowDrag: true,
+      allowRenameColumn: false,
+      allowComments: false,
+      parseFormulas: false,
+      nestedHeaders: false,
+      onchange: onChange,
+      oninsertrow: onChange,
+      ondeleterow: onChange,
+      oninsertcolumn: onChange,
+      ondeletecolumn: onChange,
+      onmoverow: onChange,
+      onmovecolumn: onChange,
+      onSort: onChange,
+      onmerge: onChange,
+      onundo: onChange,
+      onredo: onChange,
+      updateTable: (instance, cell, col, row, val, label, cellName) => {
+        if (cols[col]) {
+          cell.style.textAlign = cols[col].align
+        } else {
+          cell.style.textAlign = 'left'
+        }
       }
     }
 
-    loading = false
+    table = jspreadsheet(document.getElementById('spreadsheet'), options);
+    window.table = table
+  })
+
+  const setColumnAlign = (align) => {
+    const selectedColumns = table.getSelectedColumns()
+    selectedColumns.forEach((col) => {
+      cols[col] ||= {}
+      cols[col].align = align
+    })
+    table.updateSelectionFromCoords(selectedColumns[0], 0, selectedColumns[selectedColumns.lenght], table.getData().length)
+    table.setData(table.getData())
+    cols = cols
+    data = table.getData()
+  }
+
+  const onChange = (e) => {
+    data = table.getData()
+  }
+
+  const addRow = () => {
+    table.insertRow()
+    data = table.getData()
+  }
+  const addColumn = () => {
+    table.insertColumn()
+    data = table.getData()
+  }
+
+  const resetTable = () => {
+    table.deleteColumn(0, table.getData()[0].length)
+    table.deleteRow(0, table.getData().length)
+    addRow()
+    addRow()
+    addRow()
+    addColumn()
+    addColumn()
+    addColumn()
+    table.setData([[]])
+    data = []
+    cols = {}
+  }
+
+  const updateUrl = (cols, data) => {
+    if(!loading) {
+      const table = LZString.compressToEncodedURIComponent(JSON.stringify({cols: cols, data: data, v: 0}))
+      url = `?table=${table}`
+      history.replaceState(history.state, '', url)
+    }
   }
 
   const loadFromUrl = () => {
     const table = (new URL(window.location)).searchParams.get('table')
     if (table) {
       const raw = JSON.parse(LZString.decompressFromEncodedURIComponent(table))
-      headers = raw.headers
+      cols = raw.cols
       data = raw.data
-      console.log(headers, data)
     }
+
+    loading = false
   }
 
-  $: output = generateMarkdown(headers, data)
-  $: updateUrl(headers, data)
+  $: updateUrl(cols, data)
+  $: markdownTable = generateMarkdown(cols, data)
 
 </script>
-<svelte:window on:paste={(e) => { onPaste(e)}}/>
-<div class="container p-3">
-  { currentCell.x }:{currentCell.y}
-  <button on:click={addRow}> Add row </button>
-  <button on:click={addCol}> Add col </button>
+
+<div class="container">
+  <input type="button" value="Add row" on:click="{addRow}" />
+  <input type="button" value="Add column" on:click="{addColumn}" />
+  <input type="button" value="Reset" on:click="{resetTable}" />
   <br/>
-  <table class="table table-hover table-bordered">
-    <thead>
-      <tr>
-        <th></th> <!-- empty -->
-        {#each headers as head}
-          <ColumnControls on:removeColumn={removeColumn} on:update={updateCallback} head={head}/>
-        {/each}
-      </tr>
-    </thead>
-    <tbody class="table-group-divider">
-      {#each data as row, rowIndex}
-        <tr>
-          <td>
-            <button class="delete-row-button btn btn-sm btn-warning" on:click={() => removeRow(row)}> remove </button>
-          </td>
-          {#each row as cell, cellIndex}
-            <Cell cell={cell} align={headers[cellIndex].align} on:blur={unsetFocus} on:focus={() => setFocus(rowIndex + 1, cellIndex)} on:update={updateCallback}/>
-          {/each}
-        </tr>
-      {/each}
-    </tbody>
-  </table>
-
-  <div class="markdown-code">
-    <button class="copy-button btn btn-sm btn-info" use:clickToCopy={'code.markdown'}>
-      Click to copy
-    </button>
-<pre><code class="markdown">{ output }
-[☝️ edit me](https://markdowntable.netlify.app/{url})
+  <div id="spreadsheet"></div>
+    <div class="markdown-code">
+      <button class="copy-button btn btn-sm btn-info" use:clickToCopy={'code.markdown'}>
+        Click to copy
+      </button>
+<pre><code class="markdown">{ markdownTable }
+{#if url}
+[☝️edit me](https://markdowntable.netlify.app/{url})
+{/if}
 </code></pre>
-  </div>
+    </div>
 </div>
-
 <style>
-  .markdown-code {
-    background: #eee;
-    border: 2px solid #aaa;
-    border-radius: 5px;
-    padding: 20px;
-    position: relative;
-   }
-
-  .markdown-code .copy-button {
-    position: absolute;
-    display: none;
-    right: 5px;
-    top: 5px;
-  }
-
-  .markdown-code:hover .copy-button {
-    display: block;
-  }
-
-  .delete-row-button {
-    visibility: hidden;
-   }
-
-  tr:hover .delete-row-button {
-    visibility: visible;
-   }
 </style>
