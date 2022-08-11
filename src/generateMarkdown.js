@@ -4,7 +4,10 @@
     data.forEach((row, indexRow) => {
       code = code.concat("| ")
       row.forEach((cell, indexCell) => {
+        const col = cols[indexCell]
+        if(col && col.bold) { code = code.concat("**") }
         code = code.concat(cell)
+        if(col && col.bold) { code = code.concat("**") }
         code = code.concat(" | ")
       })
 

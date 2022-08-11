@@ -46,6 +46,11 @@
           content: 'format_align_right',
           onclick: () => setColumnAlign("right")
         },
+        {
+          type: 'i',
+          content: 'format_bold',
+          onclick: () => setBold()
+        },
       ],
       defaultColWidth: 100,
       minDimensions:[3,3],
@@ -67,8 +72,12 @@
       onundo: onChange,
       onredo: onChange,
       updateTable: (instance, cell, col, row, val, label, cellName) => {
-        if (cols[col]) {
-          cell.style.textAlign = cols[col].align
+        const colConfig = cols[col]
+        if (colConfig) {
+          cell.style.textAlign = colConfig.align || "left"
+          if(colConfig.bold) {
+            cell.style.fontWeight = "bold"
+          }
         } else {
           cell.style.textAlign = 'left'
         }
@@ -79,16 +88,44 @@
     window.table = table
   })
 
+  const updateTable = () => {
+    const selectedColumns = table.getSelectedColumns()
+    table.updateSelectionFromCoords(selectedColumns[0], 0, selectedColumns[selectedColumns.lenght], table.getData().length)
+    table.setData(table.getData())
+    cols = cols
+    data = table.getData()
+  }
+
   const setColumnAlign = (align) => {
     const selectedColumns = table.getSelectedColumns()
     selectedColumns.forEach((col) => {
       cols[col] ||= {}
       cols[col].align = align
     })
-    table.updateSelectionFromCoords(selectedColumns[0], 0, selectedColumns[selectedColumns.lenght], table.getData().length)
-    table.setData(table.getData())
-    cols = cols
-    data = table.getData()
+    updateTable()
+  }
+
+  const setBold = () => {
+    const selectedRows = table.getSelectedRows(true)
+    const selectedColumns = table.getSelectedColumns()
+
+    if(selectedRows.length == data.length) {
+      selectedColumns.forEach((col) => {
+        cols[col] ||= {}
+        cols[col].bold = true
+      })
+    } else {
+      selectedRows.forEach((row) => {
+        selectedColumns.forEach((col) => {
+          // TODO: indivual cells
+          // continue
+        })
+      })
+    }
+
+    // TODO: fullrows
+
+    updateTable()
   }
 
   const onChange = (e) => {
@@ -113,9 +150,9 @@
     addColumn()
     addColumn()
     addColumn()
-    table.setData([[]])
-    data = []
     cols = {}
+    data = []
+    table.setData([[]])
   }
 
   const updateUrl = (cols, data) => {
