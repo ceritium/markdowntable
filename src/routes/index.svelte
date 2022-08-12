@@ -19,20 +19,6 @@
       data: data,
       toolbar:[
         {
-            type: 'i',
-            content: 'undo',
-            onclick: function() {
-                table.undo();
-            }
-        },
-        {
-            type: 'i',
-            content: 'redo',
-            onclick: function() {
-                table.redo();
-            }
-        },
-        {
           type: 'i',
           content: 'format_align_left',
           onclick: () => setColumnAlign("left")
