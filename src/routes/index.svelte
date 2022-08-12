@@ -3,6 +3,7 @@
   import { onMount } from 'svelte'
   import contextMenu from '../contextMenu.js'
   import generateMarkdown from '../generateMarkdown.js'
+  import parseMarkdown from '../parseMarkdown.js'
   import { clickToCopy } from "../clickToCopy.js"
 
   let table
@@ -190,19 +191,52 @@
     loading = false
   }
 
+  const importMarkdown = (event) => {
+   event.preventDefault();
+
+    let paste = (event.clipboardData || window.clipboardData).getData('text');
+    const raw = parseMarkdown(paste)
+    cols = raw.cols
+    rows = {}
+    cells = {}
+    data = raw.data
+    table.setData(data)
+    updateTable()
+  }
+
   $: updateUrl(cols, rows, data)
   $: markdownTable = generateMarkdown(cols, rows, cells, data)
 
 </script>
+<nav class="navbar bg-light">
+  <div class="container">
+    <span class="navbar-brand mb-0 h1">MarkdownTable</span>
+  </div>
+</nav>
 
-<div class="container">
-  <input type="button" value="Import" on:click="{addRow}" />
-  <input type="button" value="Add row" on:click="{addRow}" />
-  <input type="button" value="Add column" on:click="{addColumn}" />
-  <input type="button" value="Reset" on:click="{resetTable}" />
-  <br/>
-  <div id="spreadsheet"></div>
-    <div class="markdown-code">
+<div class="container mt-4">
+  <ul class="nav nav-tabs mb-4" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#editor" type="button" role="tab" aria-controls="editor" aria-selected="true">Editor</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#markdown-code" type="button" role="tab" aria-controls="markdown-code" aria-selected="false">Markdown output</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#import" type="button" role="tab" aria-controls="import" aria-selected="false">Import</button>
+    </li>
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="editor" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+      <input type="button" value="Import" on:click="{addRow}" />
+      <input type="button" value="Add row" on:click="{addRow}" />
+      <input type="button" value="Add column" on:click="{addColumn}" />
+      <input type="button" value="Reset" on:click="{resetTable}" />
+      <br/>
+      <div id="spreadsheet"></div>
+    </div>
+
+    <div class="tab-pane fade" id="markdown-code" role="tabpanel" aria-labelledby="markdown-code" tabindex="0">
       <button class="copy-button btn btn-sm btn-info" use:clickToCopy={'code.markdown'}>
         Click to copy
       </button>
@@ -212,31 +246,11 @@
 {/if}
 </code></pre>
     </div>
-</div>
-
-
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  Launch demo modal
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Paste here</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-    </div>
   </div>
 </div>
 
 <style>
-  .markdown-code {
+  #markdown-code {
     background: #eee;
     border: 2px solid #aaa;
     border-radius: 5px;
@@ -244,19 +258,19 @@
     position: relative;
    }
 
-  .markdown-code pre {
+  #markdown-code pre {
     overflow: hidden;
     margin-bottom: 0;
   }
 
-  .markdown-code .copy-button {
+  #markdown-code .copy-button {
     position: absolute;
     display: none;
     right: 5px;
     top: 5px;
   }
 
-  .markdown-code:hover .copy-button {
+  #markdown-code:hover .copy-button {
     display: block;
   }
 </style>

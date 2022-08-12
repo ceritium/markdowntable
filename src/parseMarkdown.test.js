@@ -1,4 +1,3 @@
-// const parseMarkdown = require('./parseMarkdown.js');
 import parseMarkdown from './parseMarkdown.js'
 
 test('it works', () => {
