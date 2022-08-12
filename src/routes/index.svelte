@@ -39,6 +39,12 @@
           content: 'format_bold',
           onclick: () => setBold()
         },
+        {
+          type: 'i',
+          content: 'restart_alt',
+          onclick: () => resetTable()
+        },
+
       ],
       defaultColWidth: 100,
       minDimensions:[3,3],
@@ -87,7 +93,6 @@
     }
 
     table = jspreadsheet(document.getElementById('spreadsheet'), options);
-    window.table = table
   })
 
   const updateTable = () => {
