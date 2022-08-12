@@ -10,6 +10,7 @@
   let url;
   let cols = {}
   let rows = {}
+  let cells = {}
   let data = []
 
   onMount(() => {
@@ -59,6 +60,12 @@
       onundo: onChange,
       onredo: onChange,
       updateTable: (instance, cell, col, row, val, label, cellName) => {
+        const cellConfig = cells[`${row}:${col}`]
+        if(cellConfig) {
+          if(cellConfig.bold) {
+            cell.style.fontWeight = "bold"
+          }
+        }
 
         const rowConfig = rows[row]
         if(rowConfig) {
@@ -119,8 +126,8 @@
     } else {
       selectedRows.forEach((row) => {
         selectedColumns.forEach((col) => {
-          // TODO: indivual cells
-          // continue
+          cells[`${row}:${col}`] ||= {}
+          cells[`${row}:${col}`].bold = !!!cells[`${row}:${col}`].bold
         })
       })
     }
@@ -160,8 +167,8 @@
 
   const updateUrl = (cols, rows, data) => {
     if(!loading) {
-      const table = LZString.compressToEncodedURIComponent(JSON.stringify({cols: cols, rows: rows, data: data, v: 0}))
-      url = `?table=${table}`
+      const table = LZString.compressToEncodedURIComponent(JSON.stringify({cols: cols, rows: rows, cells: cells, data: data}))
+      url = `?table=${table}&v=0`
       history.replaceState(history.state, '', url)
     }
   }
@@ -179,7 +186,7 @@
   }
 
   $: updateUrl(cols, rows, data)
-  $: markdownTable = generateMarkdown(cols, rows, data)
+  $: markdownTable = generateMarkdown(cols, rows, cells, data)
 
 </script>
 

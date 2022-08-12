@@ -5,7 +5,7 @@ const ALIGNS = {
   default: "---",
 }
 
-const generateMarkdown = (cols, rows, data) => {
+const generateMarkdown = (cols, rows, cells, data) => {
   let code = ""
 
   const add = (text) => { code = code.concat(text) }
@@ -25,9 +25,10 @@ const generateMarkdown = (cols, rows, data) => {
      return row.map((cell, indexCol) => {
        const col = cols[indexCol]
        const row = rows[indexRow]
+       const cellConfig = cells[`${indexCol}:${indexRow}`]
        if(!cell) { return "" }
 
-       if((col && col.bold) || (row && row.bold)) {
+       if((col && col.bold) || (row && row.bold) || cellConfig && cellConfig.bold) {
           return bold(cell)
        } else {
          return cell
