@@ -207,6 +207,9 @@
 <nav class="navbar bg-light">
   <div class="container-fluid">
     <span class="navbar-brand mb-0 h1">MarkdownTable</span>
+    <div class="navbar-nav me-5">
+      <a class="nav-link" target="_blank" href="https://github.com/ceritium/markdowntable">Github</a>
+    </div>
   </div>
 </nav>
 
