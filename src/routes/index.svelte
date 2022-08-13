@@ -17,6 +17,7 @@
   onMount(() => {
     loadFromUrl()
 
+    const editorEl = document.getElementById('editor')
     const options = {
       data: data,
       toolbar:[
@@ -40,13 +41,10 @@
           content: 'format_bold',
           onclick: () => setBold()
         },
-        {
-          type: 'i',
-          content: 'restart_alt',
-          onclick: () => resetTable()
-        },
-
       ],
+      tableOverflow: true,
+      tableWidth: `${editorEl.offsetWidth}px`,
+      tableHeight: "100%",
       defaultColWidth: 100,
       minDimensions:[3,3],
       columnDrag: true,
@@ -209,47 +207,67 @@
 
 </script>
 <nav class="navbar bg-light">
-  <div class="container">
+  <div class="container-fluid">
     <span class="navbar-brand mb-0 h1">MarkdownTable</span>
   </div>
 </nav>
 
-<div class="container mt-4">
-  <ul class="nav nav-tabs mb-4" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#editor" type="button" role="tab" aria-controls="editor" aria-selected="true">Editor</button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#markdown-code" type="button" role="tab" aria-controls="markdown-code" aria-selected="false">Markdown output</button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#import" type="button" role="tab" aria-controls="import" aria-selected="false">Import</button>
-    </li>
-  </ul>
-  <div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="editor" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-      <input type="button" value="Import" on:click="{addRow}" />
-      <input type="button" value="Add row" on:click="{addRow}" />
-      <input type="button" value="Add column" on:click="{addColumn}" />
-      <input type="button" value="Reset" on:click="{resetTable}" />
-      <br/>
-      <div id="spreadsheet"></div>
+<div class="container-fluid mt-4">
+  <div class="row">
+    <div class="col-md-6">
+      <div id="editor">
+        <div id="custom-actions">
+          <input type="button" value="Add row" on:click="{addRow}" />
+          <input type="button" value="Add column" on:click="{addColumn}" />
+          <input type="button" class="ms-5" value="Reset" on:click="{resetTable}" />
+        </div>
+        <div id="spreadsheet"></div>
+      </div>
     </div>
+    <div class="col-md-6">
+      <ul class="nav nav-tabs mb-4" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#markdown-code" type="button" role="tab" aria-controls="markdown-code" aria-selected="false">Markdown output</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#import" type="button" role="tab" aria-controls="import" aria-selected="false">Import</button>
+        </li>
+      </ul>
 
-    <div class="tab-pane fade" id="markdown-code" role="tabpanel" aria-labelledby="markdown-code" tabindex="0">
-      <button class="copy-button btn btn-sm btn-info" use:clickToCopy={'code.markdown'}>
-        Click to copy
-      </button>
-<pre><code class="markdown">{ markdownTable }
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="markdown-code" role="tabpanel" aria-labelledby="markdown-code" tabindex="0">
+          <button class="copy-button btn btn-sm btn-info" use:clickToCopy={'code.markdown'}>
+            Click to copy
+          </button>
+    <pre><code class="markdown">{ markdownTable }
 {#if url}
 [☝️edit me](https://markdowntable.jose.gr/{url})
-{/if}
-</code></pre>
+{/if}</code></pre>
+        </div>
+
+        <div class="tab-pane fade" id="import" role="tabpanel" aria-labelledby="import" tabindex="0">
+          <textarea class="form-control"> lol </textarea>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <style>
+
+  #editor {
+    position: relative;
+  }
+
+  #custom-actions {
+    position: absolute;
+    right: 5px;
+    top: 2px;
+    z-index: 999;
+  }
+  :global(.jexcel_content) {
+    box-shadow: none !important;
+  }
   #markdown-code {
     background: #eee;
     border: 2px solid #aaa;
