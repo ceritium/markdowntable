@@ -18,3 +18,7 @@ For example:
 | **Bold row**    | **R**             | **S**               | **T**               | 
 
 [☝️edit me](https://markdowntable.jose.gr/?table=N4Igxg9gNgziBcoAMDQCNoBMEBcBOArgKYC+ANCAIyogCGUAlgOYB2CIURAZjiOSACYa9Zm3jgiLHETx8KAZmGNW7PMwAWvEvzwQA7nEQgArDQxRs8fMW0UwRKLFT9MtHLQQBtTyABCWAAIAYWgCAFs2CgBBZRYAzh4AyChwyJAY0STJaTwk0IiQCgAlDRwsqRk8lIKAXTIfKMK-JqCmgBEQOp8AUSaAMSaAcSaACU76kABJJoApJoBpJoAZcZ8AWSaAOSaAeSaABVW-QN09JqKmgGUmgBVOmpIgA&v=0)
+
+## Screenshot
+
+![imagen](https://user-images.githubusercontent.com/16633/184510713-b0042d8d-8866-48da-95a7-9c4cbb99753b.png)
