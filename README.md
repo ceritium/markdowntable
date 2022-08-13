@@ -1,38 +1,20 @@
-# create-svelte
+# MarkdownTable
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+This is a simple and easy-to-use application for generating markdown tables. All you need to do is input the data you want to include in the table, and the application will generate the markdown cod. 
 
-## Creating a project
+MarkdownTable relies on the URL for storing the data. It allows sharing of small and medium size data sets without any backend.
 
-If you're seeing this, you've probably already done this step. Congrats!
+The application will automatically format the table to fit your entered data with a link to edit your own table in the future.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+For example:
 
-## Developing
+| **Bold Column** | Align left column | Align center column | Right center column | 
+| ---             | :---              | :---:               | ---:                | 
+| **A**           | B                 | C                   | D                   | 
+| **E**           | F                 | G                   | H                   | 
+| **I**           | J                 | K                   | L                   | 
+| **M**           | N                 | O                   | P                   | 
+| **Bold row**    | **R**             | **S**               | **T**               | 
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+[☝️edit me](https://markdowntable.jose.gr/?table=N4Igxg9gNgziBcoAMDQCNoBMEBcBOArgKYC+ANCAIyogCGUAlgOYB2CIURAZjiOSACYa9Zm3jgiLHETx8KAZmGNW7PMwAWvEvzwQA7nEQgArDQxRs8fMW0UwRKLFT9MtHLQQBtTyABCWAAIAYWgCAFs2CgBBZRYAzh4AyChwyJAY0STJaTwk0IiQCgAlDRwsqRk8lIKAXTIfKMK-JqCmgBEQOp8AUSaAMSaAcSaACU76kABJJoApJoBpJoAZcZ8AWSaAOSaAeSaABVW-QN09JqKmgGUmgBVOmpIgA&v=0)
