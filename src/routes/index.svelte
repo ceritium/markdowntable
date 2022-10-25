@@ -204,6 +204,13 @@
   $: markdownTable = generateMarkdown(cols, rows, cells, data)
 
 </script>
+
+<svelte:head>
+  {#if import.meta.env.VITE_HEAD_INJECTION }
+    {@html import.meta.env.VITE_HEAD_INJECTION}
+  {/if}
+</svelte:head>
+
 <nav class="navbar bg-light">
   <div class="container-fluid">
     <span class="navbar-brand mb-0 h1">
@@ -233,6 +240,21 @@
       <RightPanel importMarkdown={importMarkdown} markdownTable={markdownTable} url={url}/>
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-6 m-auto mt-4">
+      <div class="lead border rounded p-4 m-2">
+        <p>
+          This is a simple and easy-to-use application for generating markdown tables. All you need to do is input the data you want to include in the table, and the application will generate the markdown code.
+          <br/>
+        MarkdownTable relies on the URL for storing the data. It allows sharing of small and medium size data sets without any backend.
+          <br/>
+
+        The application will automatically format the table to fit your entered data with a link to edit your own table in the future.
+        </p>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <style>
