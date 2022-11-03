@@ -166,6 +166,7 @@
     addColumn()
     addColumn()
     cols = {}
+    cells = {}
     data = []
     table.setData([[]])
   }
