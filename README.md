@@ -9,15 +9,16 @@ The application will automatically format the table to fit your entered data wit
 
 For example:
 
-| **Bold Column** | Align left column | Align center column | Right center column | 
-| ---             | :---              | :---:               | ---:                | 
-| **A**           | B                 | C                   | D                   | 
-| **E**           | F                 | G                   | H                   | 
-| **I**           | J                 | K                   | L                   | 
-| **M**           | N                 | O                   | P                   | 
-| **Bold row**    | **R**             | **S**               | **T**               | 
+| **Bold Column** | Align left column | Align center column | Align right column | 
+| ---             | :---              | :---:               | ---:               | 
+| **A**           | B                 | C                   | D                  | 
+| **E**           | F                 | G                   | H                  | 
+| **I**           | J                 | K                   | L                  | 
+| **M**           | N                 | O                   | P                  | 
+| **Bold row**    | **R**             | **S**               | **T**              | 
 
-[☝️edit me](https://markdowntable.jose.gr/?table=N4Igxg9gNgziBcoAMDQCNoBMEBcBOArgKYC+ANCAIyogCGUAlgOYB2CIURAZjiOSACYa9Zm3jgiLHETx8KAZmGNW7PMwAWvEvzwQA7nEQgArDQxRs8fMW0UwRKLFT9MtHLQQBtTyABCWAAIAYWgCAFs2CgBBZRYAzh4AyChwyJAY0STJaTwk0IiQCgAlDRwsqRk8lIKAXTIfKMK-JqCmgBEQOp8AUSaAMSaAcSaACU76kABJJoApJoBpJoAZcZ8AWSaAOSaAeSaABVW-QN09JqKmgGUmgBVOmpIgA&v=0)
+[☝️edit me](https://markdowntable.jose.gr/?table=N4Igxg9gNgziBcoAMDQCNoBMEBcBOArgKYC+ANCAIyogCGUAlgOYB2CIURAZjiOSACYa9Zm3jgiLHETx8KAZmGNW7PMwAWvEvzwQA7nEQgArDQxRs8fMW0UwRKLFT9MtHLQQBtTyABCWAAIAYWgCAFs2CgBBZRYAzh4AyChwyJAY0STJaTwk0IiQaNiAtSZNPJSCgF0yHyjCvwaghoAREBqfAFEGgDEGgHEGgAl22pAASQaAKQaAaQaAGVGfAFkGgDkGgHkGgAVlv0DdPQaAJQaAZQaAFXaqkiA&v=0)
+
 
 ## Screenshot
 
