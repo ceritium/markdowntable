@@ -22,4 +22,4 @@ For example:
 
 ## Screenshot
 
-![imagen](https://user-images.githubusercontent.com/16633/184510713-b0042d8d-8866-48da-95a7-9c4cbb99753b.png)
+![imagen](https://user-images.githubusercontent.com/16633/199809033-85cca946-f99c-4c33-bd2d-b0e9d00b4762.png)
