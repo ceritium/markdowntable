@@ -166,11 +166,12 @@
     addColumn()
     addColumn()
     cols = {}
+    cells = {}
     data = []
     table.setData([[]])
   }
 
-  const updateUrl = (cols, rows, data) => {
+  const updateUrl = (cols, rows, cells, data) => {
     if(!loading) {
       const table = LZString.compressToEncodedURIComponent(JSON.stringify({cols: cols, rows: rows, cells: cells, data: data}))
       url = `?table=${table}&v=0`
@@ -184,6 +185,7 @@
       const raw = JSON.parse(LZString.decompressFromEncodedURIComponent(table))
       cols = raw.cols || {}
       rows = raw.rows || {}
+      cells = raw.cells || {}
       data = raw.data || []
     }
 
@@ -201,14 +203,14 @@
 
     cols = raw.cols
     rows = {}
-    cells = {}
+    cells = raw.cells
     data = raw.data
 
     table.setData(data)
     updateTable()
   }
 
-  $: updateUrl(cols, rows, data)
+  $: updateUrl(cols, rows, cells, data)
   $: markdownTable = generateMarkdown(cols, rows, cells, data)
 
 </script>
