@@ -25,7 +25,7 @@ const generateMarkdown = (cols, rows, cells, data) => {
      return row.map((cell, indexCol) => {
        const col = cols[indexCol]
        const row = rows[indexRow]
-       const cellConfig = cells[`${indexCol}:${indexRow}`]
+       const cellConfig = cells[`${indexRow}:${indexCol}`]
        if(!cell) { return "" }
 
        if((col && col.bold) || (row && row.bold) || cellConfig && cellConfig.bold) {
