@@ -192,10 +192,18 @@
 
   const importMarkdown = (text) => {
     const raw = parseMarkdown(text)
+    table.deleteColumn(0, table.getData()[0].length)
+    table.deleteRow(0, table.getData().length)
+
+    for (let i = 0; i < raw.data[0].length; i++) {
+      addColumn()
+    }
+
     cols = raw.cols
     rows = {}
     cells = {}
     data = raw.data
+
     table.setData(data)
     updateTable()
   }
