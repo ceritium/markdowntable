@@ -17,9 +17,9 @@ test('it works', () => {
   ]
 
   const expectedCols = {
-    1: { align: "left" },
-    2: { align: "center" },
-    3: { align: "right" },
+    0: { align: "left" },
+    1: { align: "center" },
+    2: { align: "right" },
   }
 
   const expectedCells = {

@@ -9,7 +9,7 @@
 
 
   let importText = `
-| **Bold Column** | Align left column | Align center column | Right center column |
+| **Bold Column** | Align left column | Align center column | Align right column |
 | ---             | :---              | :---:               | ---:                |
 | **A**           | B                 | C                   | D                   |
 | **E**           | F                 | G                   | H                   |

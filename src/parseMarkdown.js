@@ -29,16 +29,14 @@ const parseMarkdown = (text) => {
     }
   })
 
-  lines[1].split("|").forEach((item, colIndex, items) => {
-    if(colIndex != 0 && colIndex != items.length -1) { 
-      const chars = item.trim().split("")
-      if(chars[0] == ":" && chars[chars.length-1] == ":") {
-        colsData[colIndex] = {align: "center"}
-      } else if (chars[0] == ":") {
-        colsData[colIndex] = {align: "left"}
-      } else if (chars[chars.length-1] == ":") {
-        colsData[colIndex] = {align: "right"}
-      }
+  lines[1].split("|").slice(1,-1).forEach((item, colIndex, items) => {
+    const chars = item.trim().split("")
+    if(chars[0] == ":" && chars[chars.length-1] == ":") {
+      colsData[colIndex] = {align: "center"}
+    } else if (chars[0] == ":") {
+      colsData[colIndex] = {align: "left"}
+    } else if (chars[chars.length-1] == ":") {
+      colsData[colIndex] = {align: "right"}
     }
   })
 
