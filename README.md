@@ -1,10 +1,10 @@
 # MarkdownTable
 
-This is a simple and easy-to-use application for generating markdown tables. All you need to do is input the data you want to include in the table, and the application will generate the markdown code.
+This application makes it easy to create markdown tables. You just need to input your data and the application will generate the markdown code for you.
 
-MarkdownTable relies on the URL for storing the data. It allows sharing of small and medium size data sets without any backend.
+To store your data, MarkdownTable uses URLs. This allows you to share small to medium-sized data sets without needing a backend.
 
-The application will automatically format the table to fit your entered data with a link to edit your own table in the future.
+The application will adjust the table format to fit your data and provide you with a link to edit it.
 
 
 For example:
